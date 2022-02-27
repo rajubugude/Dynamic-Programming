@@ -1,0 +1,60 @@
+### [Problem Link Here](https://www.codingninjas.com/codestudio/problems/minimum-elements_3843091?leftPanelTab=0)
+
+#### Recursive code
+
+```
+import sys
+
+def helper(idx,num,x):
+    if idx == 0:
+        if x%num[0] == 0:
+            return x//num[0]
+        else:
+            return sys.maxsize        
+        
+    notTake = helper(idx-1,num,x)
+    take = sys.maxsize
+    if num[idx] <= x:
+        take = 1 + helper(idx,num,x-num[idx])    
+    return min(take,notTake)
+    
+
+def minimumElements(num: List[int], x: int) -> int:
+    idx = len(num)-1
+    ans =  helper(idx,num,x)
+    if ans >= sys.maxsize:
+        return -1
+    return ans
+```
+
+#### Memoization
+
+```
+import sys
+
+def helper(idx,num,x,dp):
+    if idx == 0:
+        if x%num[0] == 0:
+            return x//num[0]
+        else:
+            return sys.maxsize        
+        
+    if dp[idx][x] != -1:
+        return dp[idx][x]
+    
+    notTake = helper(idx-1,num,x,dp)
+    take = sys.maxsize
+    if num[idx] <= x:
+        take = 1 + helper(idx,num,x-num[idx],dp)    
+    dp[idx][x] =  min(take,notTake)
+    return dp[idx][x]
+    
+
+def minimumElements(num: List[int], x: int) -> int:
+    n = len(num)
+    dp = [[-1 for _ in range(x + 1)] for _ in range(n + 1)]    
+    ans =  helper(n-1,num,x,dp)
+    if ans >= sys.maxsize:
+        return -1
+    return ans
+```
